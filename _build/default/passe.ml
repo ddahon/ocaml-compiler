@@ -108,7 +108,7 @@ let analyser_param info =
     (*La liste des paramètres n'est plus présente, pour tester le placement des paramètres, on utilisera une astuce :
     il faudra écrire un programme qui renvoie le paramètre *)
     match info_ast_to_info info with
-    | InfoFun(n,_,_) -> [(n,(List.flatten (List.map analyser_param lp))@(List.flatten (List.map (analyser_instruction) li)))]
+    | InfoFun(n,_,_, _) -> [(n,(List.flatten (List.map analyser_param lp))@(List.flatten (List.map (analyser_instruction) li)))]
     | _ -> failwith "Internal error"
 
   (* Renvoie la suite des adresses des variables déclarées dans les fonctions et dans le programme principal *)

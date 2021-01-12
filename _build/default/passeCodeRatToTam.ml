@@ -27,7 +27,7 @@ struct
       begin
       let code_arguments = String.concat "" (List.map analyse_code_expression le) in
       match info_ast_to_info info with
-      | InfoFun (n, _, _) -> code_arguments ^ "CALL (ST) " ^ n ^ "\n"
+      | InfoFun (n, _, _, numero_surcharge) -> code_arguments ^ "CALL (ST) " ^ n ^ (string_of_int numero_surcharge) ^ "\n"
       | _ -> failwith("Erreur interne")
       end
     | Rationnel (e1, e2) -> (analyse_code_expression e1) ^ (analyse_code_expression e2)
@@ -38,7 +38,7 @@ struct
       match info_ast_to_info info with
         | InfoVar(_, t, dep, reg) -> 
           "LOAD " ^ "(" ^ (string_of_int (getTaille t)) ^ ") " ^ (string_of_int dep) ^ "[" ^ reg ^ "]\n"
-        | InfoConst (_, v) -> "LOADL " ^ string_of_int v
+        | InfoConst (_, v) -> "LOADL " ^ string_of_int v ^ "\n"
         | _ -> failwith("Erreur interne")
       end
     | True -> "LOADL 1\n"
@@ -67,7 +67,7 @@ struct
         | InfoVar (_, t, dep, reg) -> 
           "PUSH " ^ string_of_int (getTaille t) ^ "\n" ^ 
           analyse_code_expression e ^
-          "STORE (" ^ string_of_int (getTaille t) ^ ") " ^ string_of_int dep ^ "[" ^ reg ^ "]"
+          "STORE (" ^ string_of_int (getTaille t) ^ ") " ^ string_of_int dep ^ "[" ^ reg ^ "]" ^ "\n"
         | _ -> failwith("Erreur interne")
       end
     | AstType.Affectation (e, info) ->
@@ -75,7 +75,7 @@ struct
       match info_ast_to_info info with
       | InfoVar (_, t, dep, reg) ->
         analyse_code_expression e ^ 
-        "STORE (" ^ string_of_int (getTaille t) ^ ") " ^ string_of_int dep ^ "[" ^ reg ^ "]"
+        "STORE (" ^ string_of_int (getTaille t) ^ ") " ^ string_of_int dep ^ "[" ^ reg ^ "]" ^ "\n"
       | _ -> failwith("Erreur interne")
       end
       | AffichageInt e -> (analyse_code_expression e) ^ "SUBR IOut\n"
@@ -114,11 +114,11 @@ struct
   
   let analyse_code_fonction (Fonction (info, _, li, e)) = 
     match info_ast_to_info info with
-    | InfoFun(nom, typeRet, typeParams) ->
+    | InfoFun(nom, typeRet, typeParams, numero_surcharge) ->
     begin
       let taille_var_locales = List.fold_right (fun i ti -> (taille_variables_declarees i ) + ti) li 0 in
       let taille_params = List.fold_right (fun p tp -> (getTaille p) + tp) typeParams 0 in
-      nom ^ "\n" ^
+      nom ^ (string_of_int numero_surcharge) ^ "\n" ^
       analyse_code_li li ^
       analyse_code_expression e ^
       "POP (" ^ string_of_int(getTaille typeRet) ^ ") " ^ string_of_int taille_var_locales ^ "\n" ^

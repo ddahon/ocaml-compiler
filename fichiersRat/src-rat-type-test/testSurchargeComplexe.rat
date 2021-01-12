@@ -1,0 +1,15 @@
+int f(int x int y rat r){
+    int a = num r;
+    int b = denom r;
+    return (((x+y)+a)+b);
+}
+
+int f(int x int y int z){
+    int a = ((x+y)+z);
+    return a;
+}
+
+test{
+    int x = call f (10 2 [3/4]);
+    int r = call f (1 2 3);
+}

@@ -7,8 +7,8 @@ type info =
   (* Information associée à une variable : son nom (non indispensable mais aide au test et debbugage),
   son type, et son adresse ie son déplacement (int) par rapport à un registre (string) *)
   | InfoVar of string * typ * int * string
-  (* Information associée à une fonction : son nom (utile pour l'appel), son type de retour et la liste des types des paramètres *)
-  | InfoFun of string * typ * typ list
+  (* Information associée à une fonction : son nom (utile pour l'appel), son type de retour, la liste des types des paramètres et un entier indiquant le numero de la surcharge (commence à 0) *)
+  | InfoFun of string * typ * typ list * int 
 
 (* Table des symboles *)
 type tds 

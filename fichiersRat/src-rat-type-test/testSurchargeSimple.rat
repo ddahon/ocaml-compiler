@@ -1,0 +1,12 @@
+int f(int x){
+    return x;
+}
+
+rat f(rat r){
+    return r;
+}
+
+test{
+    int x = call f (10);
+    rat r = call f ([1/2]);
+}

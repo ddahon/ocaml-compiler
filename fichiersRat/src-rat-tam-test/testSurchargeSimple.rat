@@ -1,0 +1,11 @@
+int f (int x){
+  return x;
+}
+
+int f (rat r){
+  return (num r);
+}
+
+test{
+  print call f ([3/2]);
+}

@@ -29,7 +29,7 @@ struct
           (* Retourne None sinon *)
           let signature_compatible info = 
             match info_ast_to_info info with 
-              | InfoFun (_, _, typeParams) -> (est_compatible_list ltype typeParams)
+              | InfoFun (_, _, typeParams, _) -> (est_compatible_list ltype typeParams)
               | _ -> failwith("Erreur interne : passe de résolution des identifiants invalide")
             in
             (* On cherche la bonne fonction parmi les différentes variantes *)
@@ -37,7 +37,7 @@ struct
             | Some info -> 
               begin
                 match info_ast_to_info info with
-                | InfoFun (_, typeRet, _) -> AppelFonction (info, nle), typeRet
+                | InfoFun (_, typeRet, _, _) -> AppelFonction (info, nle), typeRet
                 | _ -> failwith("Erreur interne : passe de résolution des identifiants invalide")
               end
             | None -> raise(TypesParametresInattendus(ltype, ltype)) (* TODO : modifier l'exception pour prendre en parametre touts les types de la surcharge *)
@@ -115,7 +115,7 @@ struct
             if (est_compatible te t) then Affectation(ne, info)
             else raise(TypeInattendu(te, t))
           | InfoConst(n, _) -> raise(MauvaiseUtilisationIdentifiant n)
-          | InfoFun(n, _, _) -> raise(MauvaiseUtilisationIdentifiant n)
+          | InfoFun(n, _, _,_) -> raise(MauvaiseUtilisationIdentifiant n)
       end 
       | AstTds.Affichage(e) ->
       begin

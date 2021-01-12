@@ -134,7 +134,7 @@ let rec analyse_tds_instruction tds i =
       (* Vérification de la bonne utilisation des identifiants dans l'expression *)
       (* et obtention de l'expression transformée *)
       let ne = analyse_tds_expression tds e in
-      (* Renvoie du nouvel affichage où l'expression remplacée par l'expression issue de l'analyse *)
+      (* Renvoi du nouvel affichage où l'expression remplacée par l'expression issue de l'analyse *)
       Affichage (ne)
   | AstSyntax.Conditionnelle (c,t,e) -> 
       (* Analyse de la condition *)
@@ -178,44 +178,44 @@ and analyse_tds_bloc tds li =
 en une fonction de type AstTds.fonction *)
 (* Erreur si mauvaise utilisation des identifiants *)
 let analyse_tds_fonction maintds (AstSyntax.Fonction(t,n,lp,li,e)) = 
-  let definir_fonction () = 
+  let definir_fonction numero_surcharge = 
     (* Création d'une tds fille complémentaire à la mère pour les paramètres de la fonction *)
-    let tds_fille = creerTDSFille maintds in
+    let tds_locale = creerTDSFille maintds in
     (* Ajout des paramètres dans la tds *)
     let ajout_param tds (t, n) = 
         match chercherLocalement tds n with
           | Some _ -> raise (DoubleDeclaration n) (* Paramètre déjà déclaré *)
           | None -> 
             (*  L'identifiant n'existe pas encore : on peut l'ajouter *)
-            ajouter tds n (info_to_info_ast (InfoVar(n, t, 0, "")));      
+            let info = info_to_info_ast (InfoVar(n, t, 0, "")) in
+            ajouter tds n info;
+            (t, info)   
     in 
-    List.iter (ajout_param tds_fille) lp;
+    let info_params = List.map (ajout_param tds_locale) lp in
 
     (* Ajout de la fonction dans la tds *)
-    let typeliste = List.map fst lp in
-    let nom = info_to_info_ast (InfoFun(n, t, typeliste)) in
+    let tl = List.map fst lp in
+    let nom = info_to_info_ast (InfoFun(n, t, tl, numero_surcharge)) in
     ajouter maintds n nom;
     
     (* Analyse du corps de la fonction *)
-    let corps = List.map (analyse_tds_instruction tds_fille) li in
+    let corps = List.map (analyse_tds_instruction tds_locale) li in
+
     (* Création de l'objet AstTds.Fonction *)
-    let param_to_info (t, id) = (t, (info_to_info_ast (InfoVar(id, t, 0, "")))) in 
-    let params = List.map param_to_info lp in
-    let expression_retour = analyse_tds_expression tds_fille e in
-    Fonction(t, nom, params, corps, expression_retour)
+      let expression_retour = analyse_tds_expression tds_locale e in
+      Fonction(t, nom, info_params, corps, expression_retour)
     in
   match chercherGlobalementFonction maintds n with
     | Some linfo -> begin
-      
       let est_deja_declaree info = 
         match info_ast_to_info info with
-        | InfoFun(_, _, lt) -> (est_compatible_list lt (List.map fst lp))
+        | InfoFun(_, _, lt, _) -> (est_compatible_list lt (List.map fst lp))
         | _ -> failwith "Erreur interne"  
       in
       if (List.exists est_deja_declaree linfo) then raise (DoubleDeclaration n)
-      else definir_fonction() (* Fonction pas encore déclarée avec les types donnés *)
+      else definir_fonction (List.length linfo) (* Fonction pas encore déclarée avec les types donnés *)
     end
-    | None -> definir_fonction() (* Fonction pas encore déclarée *)
+    | None -> definir_fonction 0 (* Fonction pas encore déclarée *)
       
 
 (* analyser : AstSyntax.ast -> AstTds.ast *)

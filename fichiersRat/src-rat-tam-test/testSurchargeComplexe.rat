@@ -1,0 +1,20 @@
+bool f (int x int y int z){
+  int a = (x+y);
+  return (z=a);
+}
+
+int f (int x int y rat r){
+  int res = 0;
+  if (x=y){
+    res = (num r);
+  }
+  else {
+      res = (denom r);
+  }
+  return res;
+}
+
+test{
+  rat r = [5/7];
+  print call f (1 1 r);
+}

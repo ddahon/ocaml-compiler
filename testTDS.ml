@@ -3,7 +3,7 @@ open Compilateur
 open Exceptions
 
 exception ErreurNonDetectee;;
-
+(*
 let%test_unit "testDoubleDeclarationVariable1" = 
   try 
     let _ = compiler "../../fichiersRat/src-rat-tds-test/testDoubleDeclarationVariable1.rat"
@@ -344,3 +344,21 @@ let%test_unit "code_testfuns" =
 
 let%test_unit "code_complique" = 
   let _ = compiler   "../../fichiersRat/src-rat-tam-test/complique.rat" in ()
+*)
+
+(* Tests de la surcharge *)
+let%test_unit "testSurchargeDefSimple" = 
+  let _ = compiler "../../fichiersRat/src-rat-tds-test/testSurchargeDefSimple.rat" in ()
+
+let%test_unit "testSurchargeDefSimple2" = 
+  let _ = compiler "../../fichiersRat/src-rat-tds-test/testSurchargeDefSimple2.rat" in ()
+
+let%test_unit "testSurchargeDefComplexe" = 
+  let _ = compiler "../../fichiersRat/src-rat-tds-test/testSurchargeDefComplexe.rat" in ()
+
+let%test_unit "testSurchargeDefComplexe2" = 
+  let _ = compiler "../../fichiersRat/src-rat-tds-test/testSurchargeDefComplexe2.rat" in ()
+
+let%test_unit "testSurchargeUtilisationSimple" = 
+  let _ = compiler "../../fichiersRat/src-rat-tds-test/testSurchargeUtilisationSimple.rat" in ()
+

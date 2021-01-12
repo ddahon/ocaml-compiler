@@ -213,9 +213,9 @@ let analyse_tds_fonction maintds (AstSyntax.Fonction(t,n,lp,li,e)) =
         | _ -> failwith "Erreur interne"  
       in
       if (List.exists est_deja_declaree linfo) then raise (DoubleDeclaration n)
-      else definir_fonction()(* Fonction pas encore déclarée avec les types donnés *)
+      else definir_fonction() (* Fonction pas encore déclarée avec les types donnés *)
     end
-    | None -> definir_fonction()(* Fonction pas encore déclarée *)
+    | None -> definir_fonction() (* Fonction pas encore déclarée *)
       
 
 (* analyser : AstSyntax.ast -> AstTds.ast *)

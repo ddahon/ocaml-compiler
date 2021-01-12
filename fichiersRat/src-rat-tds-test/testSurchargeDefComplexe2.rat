@@ -1,0 +1,13 @@
+int f (int x int y int z){
+    int a = (x+y);
+    return (a+z);
+}
+
+rat f (rat r1 rat r2 rat r3){
+    rat r = (r1+r2);
+    return (r+r3);
+}
+
+test {
+  
+}

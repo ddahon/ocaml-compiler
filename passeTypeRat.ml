@@ -27,18 +27,20 @@ struct
           (* Vérifie si la fonction est compatible avec les paramètres *)
           (* Retourne l'appel de fonction correspondant à la fonction si celle ci est compatible *)
           (* Retourne None sinon *)
-          let comparer_signature info = 
+          let signature_compatible info = 
             match info_ast_to_info info with 
-              | InfoFun (_, typeRet, typeParams) ->
-                (* Vérification des types passés en paramètre *)
-                if (est_compatible_list ltype typeParams) then Some (AppelFonction (info, nle), typeRet)
-                else None
+              | InfoFun (_, _, typeParams) -> (est_compatible_list ltype typeParams)
               | _ -> failwith("Erreur interne : passe de résolution des identifiants invalide")
             in
             (* On cherche la bonne fonction parmi les différentes variantes *)
-            match List.map comparer_signature linfo with
-            | [Some(appel)] -> appel
-            | _ -> raise(TypesParametresInattendus(ltype, ltype)) (* TODO : modifier l'exception pour prendre en parametre touts les types de la surcharge *)
+            match List.find_opt signature_compatible linfo with
+            | Some info -> 
+              begin
+                match info_ast_to_info info with
+                | InfoFun (_, typeRet, _) -> AppelFonction (info, nle), typeRet
+                | _ -> failwith("Erreur interne : passe de résolution des identifiants invalide")
+              end
+            | None -> raise(TypesParametresInattendus(ltype, ltype)) (* TODO : modifier l'exception pour prendre en parametre touts les types de la surcharge *)
             
         end
       | AstTds.Rationnel (e1, e2) -> 

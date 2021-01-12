@@ -1,2 +1,2 @@
-# ocaml_compilator
-OCaml compilator for a simple language
+# ocaml-compiler
+OCaml compiler for a simple language
